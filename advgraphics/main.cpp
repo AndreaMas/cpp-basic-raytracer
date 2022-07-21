@@ -73,31 +73,49 @@ void unitTestQuaternions() {
 	}
 }
 void unitTestTransformations() {
-	Transform t;
-	t.rotate = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
-	t.translate = Vector3(30, 4, 1);
-	t.scale = 2;
+	{ // test t.inverse() and t.invert()
+		Transform t;
+		t.rotate = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
+		t.translate = Vector3(30, 4, 1);
+		t.scale = 2;
+		Point3 p(-31, 12, 1);
+		Point3 q = t.transformPoint(p);
+		Point3 r = t.inverse().transformPoint(q);
+		assert(areEqual(p, r));
 
-	Point3 p(-31, 12, 1);
-	std::cout << p << std::endl;
+		Transform t2 = t;
+		Point3 p2(30, -12, 11);
+		Point3 q2 = t2.transformPoint(p2);
+		t2.invert();
+		Point3 r2 = t2.transformPoint(q2);
+		assert(areEqual(p2, r2));
+	} 
+	{ // test transform cumulation through * operator
+		Transform tA;
+		tA.rotate = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
+		tA.translate = Vector3(3, 4, 1);
+		tA.scale = 2.0f;
+		Transform tB;
+		tB.rotate = Quaternion::fromAngleAxis(33, Vector3(2, 1, 3));
+		tB.translate = Vector3(1, 2, 3);
+		tB.scale = 1.2f;
+		Transform tAB = tA * tB;
+		Point3 p(-31, 12, 1);
+		assert(areEqual(
+			tAB.transformPoint(p), 
+			tA.transformPoint(tB.transformPoint(p))
+		));
+	}
 
-	Point3 q = t.transformPoint(p);
-	std::cout << q << std::endl;
-
-	Point3 r = t.inverse().transformPoint(q);
-	std::cout << r << std::endl;
-
-	assert(areEqual(p, r));
 }
 #pragma endregion
-
 
 /*
 	====================================================
 	Utilities
 	====================================================
 */
-#pragma region
+#pragma region Utilities
 float currentTime() {
 	static float now = 0.0f;
 	now += 0.005;
@@ -120,14 +138,14 @@ const char* intensityToCstr(Scalar intensity) {
 	default: return "??";
 	}
 }
-
+#pragma endregion
 
 /*
 	====================================================
 	RayTracing
 	====================================================
 */
-
+#pragma region RayTracing
 const char* lighting(Versor3 normal, const Versor3& lightDir) {
 	// Lambert lighting
 	Scalar diffuse = dot(normal, lightDir);
@@ -161,7 +179,7 @@ void rayCastingSphere() {
 	}
 	std::cout << screenBuffer;
 }
-
+#pragma endregion
 
 /*
 	====================================================
@@ -170,13 +188,17 @@ void rayCastingSphere() {
 */
 
 int main() {
+	
 	//unit tests
-	unitTestLinearOps();
-	unitTestProducts();
-	UnitTestRaycast();
-	UnitTestRaycastPlane();
-	unitTestQuaternions();
-	unitTestTransformations();
+	{ 
+		unitTestLinearOps();
+		unitTestProducts();
+		UnitTestRaycast();
+		UnitTestRaycastPlane();
+		unitTestQuaternions();
+		unitTestTransformations();
+	}
+
 
 	while(1)
 	rayCastingSphere();

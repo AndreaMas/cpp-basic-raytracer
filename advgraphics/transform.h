@@ -10,15 +10,16 @@ public:
 	Quaternion rotate;
 
 	Transform();
-	Vector3 transformPoint(const Vector3& p);
-	Vector3 transformVector(const Vector3& p);
-	Vector3 transformVersor(const Vector3& p);
+	Vector3 transformPoint(const Vector3& p) const;
+	Vector3 transformVector(const Vector3& p) const;
+	Vector3 transformVersor(const Vector3& p) const;
 	void invert();
 	Transform inverse()const;
-	//test
 	
 };
 
-}
+Transform operator * (const Transform& a, const Transform& b);
+
+} //end namespace mgd
 
 
