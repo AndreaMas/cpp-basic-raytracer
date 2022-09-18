@@ -112,7 +112,7 @@ void unitTestTransformations() {
 
 /*
 	====================================================
-	Utilities
+	Utilities (time)
 	====================================================
 */
 #pragma region Utilities
@@ -122,8 +122,16 @@ float currentTime() {
 	return now;
 	// return std::chrono::system_clock().now();
 }
+#pragma endregion
 
-const char* intensityToCstr(Scalar intensity) {
+
+/*
+	====================================================
+	Lesson 1
+	====================================================
+*/
+#pragma region Lesson1
+const char* intensityToCstrLesson1(Scalar intensity) {
 	// convert intensity to ashii art value
 	switch (int(round(intensity * 8))) {
 	case 0: return "  "; // darkest
@@ -138,22 +146,16 @@ const char* intensityToCstr(Scalar intensity) {
 	default: return "??";
 	}
 }
-#pragma endregion
 
-/*
-	====================================================
-	RayTracing
-	====================================================
-*/
-#pragma region RayTracing
-const char* lighting(Versor3 normal, const Versor3& lightDir) {
+const char* lightingLesson1(Versor3 normal, const Versor3& lightDir) {
 	// Lambert lighting
 	Scalar diffuse = dot(normal, lightDir);
 	if (diffuse < 0) diffuse = 0;
-	return intensityToCstr(diffuse);
+	return intensityToCstrLesson1(diffuse);
 }
 
-void rayCastingSphere() {
+
+void rayCastingSphereLesson1() {  // scene from lesson 1
 	float time = currentTime();
 	Camera cam(2.0f,45,45);
 	Versor3 lightDir = Versor3(1, 2, -2).normalized();
@@ -173,13 +175,14 @@ void rayCastingSphere() {
 			rayCast(cam.primaryRay(x, y), sphere1, hitPos, hitNorm, distMax);
 			rayCast(cam.primaryRay(x, y), plane1, hitPos, hitNorm, distMax);
 			rayCast(cam.primaryRay(x, y), sphere2, hitPos, hitNorm, distMax);
-			screenBuffer += lighting(hitNorm, lightDir);
+			screenBuffer += lightingLesson1(hitNorm, lightDir);
 		}
 		screenBuffer += "\n";
 	}
 	std::cout << screenBuffer;
 }
 #pragma endregion
+
 
 /*
 	====================================================
@@ -188,20 +191,28 @@ void rayCastingSphere() {
 */
 
 int main() {
-	
-	//unit tests
-	{ 
-		unitTestLinearOps();
-		unitTestProducts();
-		UnitTestRaycast();
-		UnitTestRaycastPlane();
-		unitTestQuaternions();
-		unitTestTransformations();
+
+
+	// unit tests
+	{
+	unitTestLinearOps();
+	unitTestProducts();
+	UnitTestRaycast();
+	UnitTestRaycastPlane();
+	unitTestQuaternions();
+	unitTestTransformations();
 	}
+	
+	while (1) {
+		// scene from lesson 1
+		// rayCastingSphereLesson1();
 
 
-	while(1)
-	rayCastingSphere();
+	}
+		
+
+	
+	
 
 
 

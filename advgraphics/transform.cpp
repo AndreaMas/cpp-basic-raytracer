@@ -20,6 +20,13 @@ Vector3 Transform::transformVersor(const Vector3& p) const
 	return rotate.applyRotationTo(p);
 }
 
+Scalar Transform::transformScalar(Scalar p) const // simply scale
+{
+	return p * scale; 
+}
+
+
+
 Transform Transform::inverse() const
 {
 	Transform t;
@@ -35,6 +42,8 @@ void Transform::invert()
 	rotate.conjugate();
 	translate = rotate.applyRotationTo(-translate * scale);
 }
+
+
 
 // first b then a
 Transform mgd::operator*(const Transform& a, const Transform& b)

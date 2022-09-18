@@ -1,5 +1,6 @@
 #pragma once
 #include "vector3.h"
+#include "transform.h"
 
 namespace mgd {
 
@@ -30,5 +31,6 @@ struct Plane {
 
 bool rayCast(Ray r, Sphere s, Point3& hitPoint, Versor3& hitNorm, float& distMax);
 bool rayCast(Ray ray, Plane plane, Point3& hitPoint, Versor3& hitNorm, float &distMax);
+Sphere applyTransToSphere(const Transform& a, const Sphere& s);
 
 };// namespace end

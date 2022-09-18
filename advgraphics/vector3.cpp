@@ -2,6 +2,7 @@
 #include <assert.h>
 //#include <cmath>
 #include "math.h"
+
 using namespace mgd;
 
 // Linear operations
@@ -101,5 +102,17 @@ Vector3 Vector3::normalized() const {
 }
 void Vector3::normalize() {
 	(* this) /= norm();
+}
+Scalar mgd::randomScalar(Scalar min, Scalar max)
+{
+	return min + (max - min) * (std::rand() % 1001) / (Scalar)1001;
+}
+Vector3 mgd::Vector3::randomVector(Scalar min, Scalar max)
+{
+	return Vector3(
+		randomScalar(min, max),
+		randomScalar(min, max),
+		randomScalar(min, max)
+	);
 }
 
