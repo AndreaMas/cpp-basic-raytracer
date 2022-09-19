@@ -8,13 +8,13 @@
 
 using namespace mgd;
 
-// produces a vector of spheres in world space
+// Turns vector of GameObjects into vector of Spheres, which can be rendered
 void Scene::toWorld(std::vector<Sphere>& allSpheres) const
-{ // clears old sphereList and pushes all spheres/gameObjects transformed
-	allSpheres.clear();
+{
+	allSpheres.clear(); // clears old sphereList
 	for (const GameObj &go : allGameObjs) {
-		allSpheres.push_back(go.body);
-		allSpheres.push_back(go.nose);
+		allSpheres.push_back(applyTransToSphere(go.transform, go.nose));
+		allSpheres.push_back(applyTransToSphere(go.transform, go.body));
 	}
 }
 
@@ -22,11 +22,16 @@ void Scene::populate(int numGameobjs)
 {
 	for (int i = 0; i < numGameobjs; i++) {
 		GameObj newGameobj;
-		newGameobj.transform.translate = Vector3::randomVector(0,5);
-		//newGameobj.transform.rotate = ;
+		newGameobj.transform.position = Vector3::randomVector(-2,2) + Vector3(0,0,10);
+		//newGameobj.transform.rotation = ;
 		//newGameobj.transform.scale = ;
-
+		allGameObjs.push_back(newGameobj);
 	}
+}
+
+void Scene::decimate()
+{
+	allGameObjs.clear();
 }
 
 const char* intensityToCstr(Scalar intensity) {
@@ -54,11 +59,20 @@ const char* lighting(Versor3 normal, const Versor3& lightDir) {
 }
 
 
+float mgd::currentTime() {
+	static float now = 0.0f;
+	now += 0.005;
+	return now;
+	// return std::chrono::system_clock().now();
+}
+
+
 // scene from lesson 1
 void mgd::rayCasting(const std::vector<Sphere>& sphereVector) {
-
+	//float time = currentTime();
 	Camera cam(2.0f, 45, 45);
-	Plane plane1(Point3(0, -1, 0), Versor3(0, 1, 0));
+	Versor3 lightDir = Versor3(1, 2, -2).normalized();
+	//Plane plane1(Point3(0, -1, 0), Versor3(0, 1, 0));
 
 	std::string screenBuffer; // string to get ready and print all at once
 
@@ -71,11 +85,10 @@ void mgd::rayCasting(const std::vector<Sphere>& sphereVector) {
 			for (Sphere s : sphereVector) {
 				rayCast(cam.primaryRay(x, y), s, hitPos, hitNorm, distMax);
 			}
+						
+			//rayCast(cam.primaryRay(x, y), plane1, hitPos, hitNorm, distMax);
 
-			
-			rayCast(cam.primaryRay(x, y), plane1, hitPos, hitNorm, distMax);
-
-			//screenBuffer += lighting(hitNorm, lightDir);
+			screenBuffer += lighting(hitNorm, lightDir);
 		}
 		screenBuffer += "\n";
 	}

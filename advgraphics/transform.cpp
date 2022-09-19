@@ -2,22 +2,22 @@
 
 using namespace mgd;
 
-Transform::Transform():rotate(Quaternion::identity()), 
-						scale(1.0f), translate(0,0,0) {}
+Transform::Transform():rotation(Quaternion::identity()), 
+						scale(1.0f), position(0,0,0) {}
 
 Vector3 Transform::transformPoint(const Vector3& p) const
 {
-	return rotate.applyRotationTo(p * scale) + translate;
+	return rotation.applyRotationTo(p * scale) + position;
 }
 
 Vector3 Transform::transformVector(const Vector3& p) const
 {
-	return rotate.applyRotationTo(p * scale);
+	return rotation.applyRotationTo(p * scale);
 }
 
 Vector3 Transform::transformVersor(const Vector3& p) const
 {
-	return rotate.applyRotationTo(p);
+	return rotation.applyRotationTo(p);
 }
 
 Scalar Transform::transformScalar(Scalar p) const // simply scale
@@ -31,16 +31,16 @@ Transform Transform::inverse() const
 {
 	Transform t;
 	t.scale = (1 / scale);
-	t.rotate = rotate.conjugated();
-	t.translate = t.rotate.applyRotationTo(-translate * t.scale);
+	t.rotation = rotation.conjugated();
+	t.position = t.rotation.applyRotationTo(-position * t.scale);
 	return t;
 }
 
 void Transform::invert()
 {
 	scale = (1 / scale);
-	rotate.conjugate();
-	translate = rotate.applyRotationTo(-translate * scale);
+	rotation.conjugate();
+	position = rotation.applyRotationTo(-position * scale);
 }
 
 
@@ -49,8 +49,8 @@ void Transform::invert()
 Transform mgd::operator*(const Transform& a, const Transform& b)
 {
 	Transform t;
-	t.rotate = a.rotate * b.rotate;
+	t.rotation = a.rotation * b.rotation;
 	t.scale = a.scale * b.scale;
-	t.translate = a.transformVector(b.translate) + a.translate;
+	t.position = a.transformVector(b.position) + a.position;
 	return t;
 }

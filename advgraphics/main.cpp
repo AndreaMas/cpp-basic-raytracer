@@ -8,6 +8,8 @@
 #include "quaternion.h"
 #include "transform.h"
 
+#include "scene.h"
+
 
 
 using namespace mgd;
@@ -75,8 +77,8 @@ void unitTestQuaternions() {
 void unitTestTransformations() {
 	{ // test t.inverse() and t.invert()
 		Transform t;
-		t.rotate = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
-		t.translate = Vector3(30, 4, 1);
+		t.rotation = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
+		t.position = Vector3(30, 4, 1);
 		t.scale = 2;
 		Point3 p(-31, 12, 1);
 		Point3 q = t.transformPoint(p);
@@ -92,12 +94,12 @@ void unitTestTransformations() {
 	} 
 	{ // test transform cumulation through * operator
 		Transform tA;
-		tA.rotate = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
-		tA.translate = Vector3(3, 4, 1);
+		tA.rotation = Quaternion::fromAngleAxis(22, Vector3(0, 1, 0));
+		tA.position = Vector3(3, 4, 1);
 		tA.scale = 2.0f;
 		Transform tB;
-		tB.rotate = Quaternion::fromAngleAxis(33, Vector3(2, 1, 3));
-		tB.translate = Vector3(1, 2, 3);
+		tB.rotation = Quaternion::fromAngleAxis(33, Vector3(2, 1, 3));
+		tB.position = Vector3(1, 2, 3);
 		tB.scale = 1.2f;
 		Transform tAB = tA * tB;
 		Point3 p(-31, 12, 1);
@@ -110,27 +112,20 @@ void unitTestTransformations() {
 }
 #pragma endregion
 
+
 /*
 	====================================================
-	Utilities (time)
+	Lesson 1 Old Scene
 	====================================================
 */
-#pragma region Utilities
-float currentTime() {
+#pragma region Lesson1
+float currentTimeLesson1() {
 	static float now = 0.0f;
 	now += 0.005;
 	return now;
 	// return std::chrono::system_clock().now();
 }
-#pragma endregion
 
-
-/*
-	====================================================
-	Lesson 1
-	====================================================
-*/
-#pragma region Lesson1
 const char* intensityToCstrLesson1(Scalar intensity) {
 	// convert intensity to ashii art value
 	switch (int(round(intensity * 8))) {
@@ -156,7 +151,7 @@ const char* lightingLesson1(Versor3 normal, const Versor3& lightDir) {
 
 
 void rayCastingSphereLesson1() {  // scene from lesson 1
-	float time = currentTime();
+	float time = currentTimeLesson1();
 	Camera cam(2.0f,45,45);
 	Versor3 lightDir = Versor3(1, 2, -2).normalized();
 	lightDir = Versor3(1,2,3*std::cos(time*0.2)).normalized();
@@ -202,12 +197,23 @@ int main() {
 	unitTestQuaternions();
 	unitTestTransformations();
 	}
+
+	Scene s;
+	int num_gameobjects = 50;
+	s.populate(num_gameobjects);
+	std::vector<Sphere> allSpheres;
+	s.toWorld(allSpheres);
+
+	rayCasting(allSpheres);
 	
 	while (1) {
-		// scene from lesson 1
+		//if (((int)currentTime() % 10)) break;
+		// working scene from lesson 1
 		// rayCastingSphereLesson1();
-
-
+		s.decimate();
+		s.populate(3);
+		s.toWorld(allSpheres);
+		rayCasting(allSpheres);
 	}
 		
 

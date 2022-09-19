@@ -105,7 +105,11 @@ void Vector3::normalize() {
 }
 Scalar mgd::randomScalar(Scalar min, Scalar max)
 {
-	return min + (max - min) * (std::rand() % 1001) / (Scalar)1001;
+	// std::rand() -> num betw 0 a MAX_INT
+	// std::rand() % 1000 -> num betw 0 a 999
+	// std::rand()%1001 / 1000 -> num betw 0 e 1
+	// min + alpha (max - min) -> interpol
+	return min + (max - min) * (std::rand() % 1001) / (Scalar)1000;
 }
 Vector3 mgd::Vector3::randomVector(Scalar min, Scalar max)
 {

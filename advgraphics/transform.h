@@ -6,8 +6,8 @@ namespace mgd {
 class Transform {
 public:
 	Scalar scale;
-	Vector3 translate;
-	Quaternion rotate;
+	Vector3 position;
+	Quaternion rotation;
 
 	Transform();
 	Vector3 transformPoint(const Vector3& p) const;
