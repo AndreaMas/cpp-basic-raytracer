@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "quaternion.h"
 #include "transform.h"
+#include "gameobj.h"
 
 #include "scene.h"
 
@@ -199,7 +200,7 @@ int main() {
 	}
 
 	Scene s;
-	int num_gameobjects = 50;
+	int num_gameobjects = 2;
 	s.populate(num_gameobjects);
 	std::vector<Sphere> allSpheres;
 	s.toWorld(allSpheres);
@@ -210,8 +211,13 @@ int main() {
 		//if (((int)currentTime() % 10)) break;
 		// working scene from lesson 1
 		// rayCastingSphereLesson1();
-		s.decimate();
-		s.populate(3);
+		
+		Transform t;
+		t.scale = 2;
+		t.position = Vector3(0,0,0.001);
+		t.rotation = Quaternion::identity();
+
+		s.transformAll(t);
 		s.toWorld(allSpheres);
 		rayCasting(allSpheres);
 	}

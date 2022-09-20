@@ -9,3 +9,19 @@ GameObj::GameObj():
 {
 
 }
+
+void mgd::applyTransToGameobj(const Transform& t, GameObj& go)
+{
+	t.transformVersor(go.forward);
+	go.transform = go.transform * t;
+}
+
+Sphere mgd::GameObj::noseInWorldSpace() const
+{
+	return applyTransToSphere(transform, nose);
+}
+
+Sphere mgd::GameObj::bodyInWorldSpace() const
+{
+	return applyTransToSphere(transform, body);
+}

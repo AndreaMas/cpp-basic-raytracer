@@ -10,6 +10,7 @@ public:
 	Vector3 im;
 	Scalar re;
 
+	Quaternion();
 	Quaternion(Vector3 _im, Scalar _re);
 	void conjugate();
 	Quaternion conjugated() const;

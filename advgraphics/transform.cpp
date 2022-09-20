@@ -43,8 +43,6 @@ void Transform::invert()
 	position = rotation.applyRotationTo(-position * scale);
 }
 
-
-
 // first b then a
 Transform mgd::operator*(const Transform& a, const Transform& b)
 {

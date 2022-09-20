@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "transform.h"
 #include "shapes3d.h"
+#include "gameobj.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,9 +13,9 @@ using namespace mgd;
 void Scene::toWorld(std::vector<Sphere>& allSpheres) const
 {
 	allSpheres.clear(); // clears old sphereList
-	for (const GameObj &go : allGameObjs) {
-		allSpheres.push_back(applyTransToSphere(go.transform, go.nose));
-		allSpheres.push_back(applyTransToSphere(go.transform, go.body));
+	for (const GameObj& go : allGameObjs) {
+		allSpheres.push_back(go.noseInWorldSpace());
+		allSpheres.push_back(go.bodyInWorldSpace());
 	}
 }
 
@@ -32,6 +33,13 @@ void Scene::populate(int numGameobjs)
 void Scene::decimate()
 {
 	allGameObjs.clear();
+}
+
+void mgd::Scene::transformAll(const Transform& t)
+{
+	for (int i = 0; i < allGameObjs.size(); i++) {
+		applyTransToGameobj(t, allGameObjs.at(i));
+	}
 }
 
 const char* intensityToCstr(Scalar intensity) {

@@ -6,6 +6,8 @@ using namespace mgd;
 
 Quaternion::Quaternion(Vector3 _im, Scalar _re) :im(_im), re(_re){}
 
+Quaternion::Quaternion() :im(), re(1) {}
+
 void Quaternion::conjugate()
 {
 	im = -im;

@@ -16,6 +16,8 @@ public:
 	Scalar transformScalar(Scalar p) const;
 	void invert();
 	Transform inverse()const;
+	//void transform();
+	//Transform transform()const;
 	
 };
 
