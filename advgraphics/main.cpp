@@ -1,5 +1,6 @@
 #include <iostream>
 #include <assert.h>
+#include <conio.h>
 //#include <chrono>
 
 #include "vector3.h"
@@ -8,10 +9,7 @@
 #include "quaternion.h"
 #include "transform.h"
 #include "gameobj.h"
-
 #include "scene.h"
-
-
 
 using namespace mgd;
 
@@ -113,7 +111,26 @@ void unitTestTransformations() {
 }
 #pragma endregion
 
-
+/*
+	====================================================
+	Utilities
+	====================================================
+*/
+#pragma region Utilities
+void InputCharToAsciiValue() {
+	char key_press;
+	int ascii_value;
+	std::cout << "\n\t\t\tPress Any Key To Check  Its ASCI Value\n\n\t\t\tPress ESC to EXIT\n\n\n";
+	while (1)
+	{
+		key_press = _getch();
+		ascii_value = key_press;
+		if (ascii_value == 27) // For ESC
+			break;
+		std::cout << "\t\t\tKEY Pressed-> \" " << key_press << " \" Ascii Value =  " << ascii_value << "\n\n";
+	}
+}
+#pragma endregion
 /*
 	====================================================
 	Lesson 1 Old Scene
@@ -150,7 +167,6 @@ const char* lightingLesson1(Versor3 normal, const Versor3& lightDir) {
 	return intensityToCstrLesson1(diffuse);
 }
 
-
 void rayCastingSphereLesson1() {  // scene from lesson 1
 	float time = currentTimeLesson1();
 	Camera cam(2.0f,45,45);
@@ -179,7 +195,6 @@ void rayCastingSphereLesson1() {  // scene from lesson 1
 }
 #pragma endregion
 
-
 /*
 	====================================================
 	Main
@@ -199,27 +214,81 @@ int main() {
 	unitTestTransformations();
 	}
 
+	// Populate scene
 	Scene s;
 	int num_gameobjects = 2;
 	s.populate(num_gameobjects);
+
+	// First render
 	std::vector<Sphere> allSpheres;
 	s.toWorld(allSpheres);
-
 	rayCasting(allSpheres);
-	
+
+
 	while (1) {
+		// Try lowering the framerate
 		//if (((int)currentTime() % 10)) break;
-		// working scene from lesson 1
-		// rayCastingSphereLesson1();
 		
+		// Working standalone scene from lesson 1
+		// rayCastingSphereLesson1();
+
+		// check Input ascii values
+		// InputCharToAsciiValue();
+
+		// Check keys pressed
+		char key_press = _getch();
+		int ascii_value = (int)key_press;
+		//printf("Key Pressed: %c -> %d\n", key_press, ascii_value);
+
+		// Default transform
 		Transform t;
-		t.scale = 2;
-		t.position = Vector3(0,0,0.001);
-		t.rotation = Quaternion::identity();
+
+		// World Axis
+		Vector3 x(1, 0, 0);
+		Vector3 y(0, 1, 0);
+		Vector3 z(0, 0, 1);
+
+		// make transform input dependant
+		switch (ascii_value) {
+		case 27: // For ESC
+			return 0;
+		case 119: // For W
+			t.position = Vector3(0, 0, -0.1);
+			break;
+		case 97:  // For A
+			t.position = Vector3(0.1, 0, 0);
+			break;
+		case 115: // For S 
+			t.position = Vector3(0, 0, 0.1);
+			break;
+		case 100: // For D
+			t.position = Vector3(-0.1, 0, 0);
+			break;
+		case 105: // For I
+			t.rotation = Quaternion();
+			break;
+		case 106: // For J
+			t.rotation = Quaternion();
+			break;
+		case 107: // For K
+			t.rotation = Quaternion();
+			break;
+		case 108: // For L
+			t.rotation = Quaternion();
+			break;
+		default: break;
+		}
+
+		// Apply non-input-dependant Transform
+		//Transform t;
+		//t.scale = 1;
+		//t.position = Vector3(0,0,0.01);
+		//t.rotation = Quaternion::identity();
 
 		s.transformAll(t);
 		s.toWorld(allSpheres);
 		rayCasting(allSpheres);
+
 	}
 		
 

@@ -2,8 +2,17 @@
 
 using namespace mgd;
 
-Transform::Transform():rotation(Quaternion::identity()), 
-						scale(1.0f), position(0,0,0) {}
+Transform::Transform():
+	rotation(Quaternion::identity()), 
+	scale(1.0f), 
+	position(0,0,0) 
+{}
+
+Transform::Transform(Scalar s, Vector3 p, Quaternion r):
+	rotation(r),
+	scale(s), 
+	position(p)
+{}
 
 Vector3 Transform::transformPoint(const Vector3& p) const
 {

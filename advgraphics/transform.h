@@ -10,6 +10,7 @@ public:
 	Quaternion rotation;
 
 	Transform();
+	Transform(Scalar s, Vector3 p, Quaternion r);
 	Vector3 transformPoint(const Vector3& p) const;
 	Vector3 transformVector(const Vector3& p) const;
 	Vector3 transformVersor(const Vector3& p) const;

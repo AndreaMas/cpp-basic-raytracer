@@ -35,7 +35,7 @@ void Scene::decimate()
 	allGameObjs.clear();
 }
 
-void mgd::Scene::transformAll(const Transform& t)
+void Scene::transformAll(const Transform& t)
 {
 	for (int i = 0; i < allGameObjs.size(); i++) {
 		applyTransToGameobj(t, allGameObjs.at(i));
