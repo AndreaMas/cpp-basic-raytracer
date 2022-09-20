@@ -23,7 +23,8 @@ void Scene::populate(int numGameobjs)
 {
 	for (int i = 0; i < numGameobjs; i++) {
 		GameObj newGameobj;
-		newGameobj.transform.position = Vector3::randomVector(-2,2) + Vector3(0,0,10);
+		newGameobj.transform.position = Vector3::randomVector(-0.1,0.1) + Vector3(0,0,10);
+		newGameobj.transform.position.y = 0;
 		//newGameobj.transform.rotation = ;
 		//newGameobj.transform.scale = ;
 		allGameObjs.push_back(newGameobj);
@@ -38,6 +39,7 @@ void Scene::decimate()
 void Scene::transformAll(const Transform& t)
 {
 	for (int i = 0; i < allGameObjs.size(); i++) {
+		allGameObjs.at(i).transform.position;
 		applyTransToGameobj(t, allGameObjs.at(i));
 	}
 }

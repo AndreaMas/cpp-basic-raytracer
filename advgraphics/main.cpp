@@ -13,6 +13,8 @@
 
 using namespace mgd;
 
+constexpr double PI_DOUBLE = 3.141592653589793;
+
 /*
 	====================================================
 	Unit tests
@@ -139,7 +141,7 @@ void InputCharToAsciiValue() {
 #pragma region Lesson1
 float currentTimeLesson1() {
 	static float now = 0.0f;
-	now += 0.005;
+	now += 0.005f;
 	return now;
 	// return std::chrono::system_clock().now();
 }
@@ -171,9 +173,9 @@ void rayCastingSphereLesson1() {  // scene from lesson 1
 	float time = currentTimeLesson1();
 	Camera cam(2.0f,45,45);
 	Versor3 lightDir = Versor3(1, 2, -2).normalized();
-	lightDir = Versor3(1,2,3*std::cos(time*0.2)).normalized();
+	lightDir = Versor3(1,2,3.0f*std::cos(time*0.2f)).normalized();
 	Sphere sphere1(Point3(0, 0, 6), 2);
-	Sphere sphere2(Point3(2.0 * std::cos(time), 1, 6 + 2.0 * std::sin(time)), 1);
+	Sphere sphere2(Point3(2.0f * std::cos(time), 1, 6 + 2.0f * std::sin(time)), 1);
 	Plane plane1(Point3(0,-1,0), Versor3(0,1,0));
 
 	std::string screenBuffer; // string to get ready and print all at once
@@ -216,7 +218,7 @@ int main() {
 
 	// Populate scene
 	Scene s;
-	int num_gameobjects = 2;
+	int num_gameobjects = 1;
 	s.populate(num_gameobjects);
 
 	// First render
@@ -243,6 +245,13 @@ int main() {
 		// Default transform
 		Transform t;
 
+		// Movement magnitude
+		const float stepVal = 0.1f;
+
+		// Rotation magnitude
+		float turnDegrees = 1.0f;
+		float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
+
 		// World Axis
 		Vector3 x(1, 0, 0);
 		Vector3 y(0, 1, 0);
@@ -253,28 +262,29 @@ int main() {
 		case 27: // For ESC
 			return 0;
 		case 119: // For W
-			t.position = Vector3(0, 0, -0.1);
+			t.position = Vector3(0, 0, -stepVal);
 			break;
 		case 97:  // For A
-			t.position = Vector3(0.1, 0, 0);
+			t.position = Vector3(stepVal, 0, 0);
 			break;
 		case 115: // For S 
-			t.position = Vector3(0, 0, 0.1);
+			t.position = Vector3(0, 0, stepVal);
 			break;
 		case 100: // For D
-			t.position = Vector3(-0.1, 0, 0);
+			t.position = Vector3(-stepVal, 0, 0);
 			break;
 		case 105: // For I
+			//Scalar rho = 2.0f * PI_DOUBLE ;
 			t.rotation = Quaternion();
 			break;
 		case 106: // For J
-			t.rotation = Quaternion();
+			t.rotation = Quaternion(y, turnRad);
 			break;
 		case 107: // For K
 			t.rotation = Quaternion();
 			break;
 		case 108: // For L
-			t.rotation = Quaternion();
+			t.rotation = Quaternion(y, -turnRad);
 			break;
 		default: break;
 		}
