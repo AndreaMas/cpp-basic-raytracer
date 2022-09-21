@@ -249,7 +249,7 @@ int main() {
 		const float stepVal = 0.1f;
 
 		// Rotation magnitude
-		float turnDegrees = 1.0f;
+		float turnDegrees = 0.05f;
 		float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
 
 		// World Axis
@@ -257,21 +257,21 @@ int main() {
 		Vector3 y(0, 1, 0);
 		Vector3 z(0, 0, 1);
 
-		// make transform input dependant
+		// transform is input dependant
 		switch (ascii_value) {
 		case 27: // For ESC
 			return 0;
 		case 119: // For W
-			t.position = Vector3(0, 0, -stepVal);
-			break;
-		case 97:  // For A
-			t.position = Vector3(stepVal, 0, 0);
-			break;
-		case 115: // For S 
 			t.position = Vector3(0, 0, stepVal);
 			break;
-		case 100: // For D
+		case 97:  // For A
 			t.position = Vector3(-stepVal, 0, 0);
+			break;
+		case 115: // For S 
+			t.position = Vector3(0, 0, -stepVal);
+			break;
+		case 100: // For D
+			t.position = Vector3(stepVal, 0, 0);
 			break;
 		case 105: // For I
 			//Scalar rho = 2.0f * PI_DOUBLE ;
@@ -294,7 +294,7 @@ int main() {
 		//t.scale = 1;
 		//t.position = Vector3(0,0,0.01);
 		//t.rotation = Quaternion::identity();
-
+		t.invert();
 		s.transformAll(t);
 		s.toWorld(allSpheres);
 		rayCasting(allSpheres);

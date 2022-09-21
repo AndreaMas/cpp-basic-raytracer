@@ -13,7 +13,7 @@ GameObj::GameObj():
 void mgd::applyTransToGameobj(const Transform& t, GameObj& go)
 {
 	t.transformVersor(go.forward);
-	go.transform = go.transform * t;
+	go.transform = t * go.transform;
 }
 
 Sphere mgd::GameObj::noseInWorldSpace() const
