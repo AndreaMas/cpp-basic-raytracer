@@ -23,7 +23,7 @@ void Scene::populate(int numGameobjs)
 {
 	for (int i = 0; i < numGameobjs; i++) {
 		GameObj newGameobj;
-		newGameobj.transform.position = Vector3::randomVector(-0.1,0.1) + Vector3(0,0,10);
+		newGameobj.transform.position = Vector3::randomVector(-0.1f,0.1f) + Vector3(0,0,10);
 		newGameobj.transform.position.y = 0;
 		//newGameobj.transform.rotation = ;
 		//newGameobj.transform.scale = ;
@@ -43,6 +43,20 @@ void Scene::transformAll(const Transform& t)
 		applyTransToGameobj(t, allGameObjs.at(i));
 	}
 }
+
+void Scene::transformAllLocally(const Transform& t)
+{
+	for (int i = 0; i < allGameObjs.size(); i++) {
+		allGameObjs.at(i).transform.position;
+		applyTransToGameobjLocally(t, allGameObjs.at(i));
+	}
+}
+
+/*
+	====================================================
+	Raycast Related
+	====================================================
+*/
 
 const char* intensityToCstr(Scalar intensity) {
 	// convert intensity to ashii art value
@@ -71,13 +85,12 @@ const char* lighting(Versor3 normal, const Versor3& lightDir) {
 
 float mgd::currentTime() {
 	static float now = 0.0f;
-	now += 0.005;
+	now += 0.005f;
 	return now;
 	// return std::chrono::system_clock().now();
 }
 
 
-// scene from lesson 1
 void mgd::rayCasting(const std::vector<Sphere>& sphereVector) {
 	//float time = currentTime();
 	Camera cam(2.0f, 45, 45);

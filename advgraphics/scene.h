@@ -11,6 +11,7 @@ public:
 	void decimate(); // destroy all allGameObjs
 	void toWorld(std::vector<Sphere> &allSpheres) const; // produces a vector of spheres in world space
 	void transformAll(const Transform&);
+	void transformAllLocally(const Transform&);
 };
 
 float currentTime();

@@ -13,7 +13,7 @@
 
 using namespace mgd;
 
-constexpr double PI_DOUBLE = 3.141592653589793;
+constexpr double PI_DOUBLE = 3.14159265358979;
 
 /*
 	====================================================
@@ -205,7 +205,6 @@ void rayCastingSphereLesson1() {  // scene from lesson 1
 
 int main() {
 
-
 	// unit tests
 	{
 	unitTestLinearOps();
@@ -216,20 +215,27 @@ int main() {
 	unitTestTransformations();
 	}
 
-	// Populate scene
+	// World Axis
+	Vector3 x(1, 0, 0);
+	Vector3 y(0, 1, 0);
+	Vector3 z(0, 0, 1);
+
+	// Movement & rotation magnitude
+	const float stepVal = 0.1f;
+	float turnDegrees = 0.05f;
+	float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
+
+	// Setup & populate scene
 	Scene s;
+	std::vector<Sphere> allSpheres;
 	int num_gameobjects = 1;
 	s.populate(num_gameobjects);
 
 	// First render
-	std::vector<Sphere> allSpheres;
 	s.toWorld(allSpheres);
 	rayCasting(allSpheres);
 
-
 	while (1) {
-		// Try lowering the framerate
-		//if (((int)currentTime() % 10)) break;
 		
 		// Working standalone scene from lesson 1
 		// rayCastingSphereLesson1();
@@ -240,24 +246,11 @@ int main() {
 		// Check keys pressed
 		char key_press = _getch();
 		int ascii_value = (int)key_press;
-		//printf("Key Pressed: %c -> %d\n", key_press, ascii_value);
 
 		// Default transform
 		Transform t;
 
-		// Movement magnitude
-		const float stepVal = 0.1f;
-
-		// Rotation magnitude
-		float turnDegrees = 0.05f;
-		float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
-
-		// World Axis
-		Vector3 x(1, 0, 0);
-		Vector3 y(0, 1, 0);
-		Vector3 z(0, 0, 1);
-
-		// transform is input dependant
+		// Transform is input dependant
 		switch (ascii_value) {
 		case 27: // For ESC
 			return 0;
@@ -274,7 +267,6 @@ int main() {
 			t.position = Vector3(stepVal, 0, 0);
 			break;
 		case 105: // For I
-			//Scalar rho = 2.0f * PI_DOUBLE ;
 			t.rotation = Quaternion();
 			break;
 		case 106: // For J
@@ -289,13 +281,9 @@ int main() {
 		default: break;
 		}
 
-		// Apply non-input-dependant Transform
-		//Transform t;
-		//t.scale = 1;
-		//t.position = Vector3(0,0,0.01);
-		//t.rotation = Quaternion::identity();
 		t.invert();
 		s.transformAll(t);
+		// s.transformAllLocally(t); // needs testing
 		s.toWorld(allSpheres);
 		rayCasting(allSpheres);
 

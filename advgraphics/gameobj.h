@@ -15,12 +15,12 @@ public:
 	Sphere body, nose;
 	
 	GameObj();
-	Sphere noseInWorldSpace() const;
+	Sphere noseInWorldSpace() const; // TODO: list of all spheres should be returned
 	Sphere bodyInWorldSpace() const;
 	
 };
 
-//void applyTransToGameobj(const Transform& t, const GameObj& go);
 void applyTransToGameobj(const Transform& t, GameObj& go);
-// void applyTransToSphereRef(const Transform& a, Sphere& s);
+void applyTransToGameobjLocally(const Transform& t, GameObj& go);
+
 } // end namespace
