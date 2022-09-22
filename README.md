@@ -1,4 +1,4 @@
-# Ashii Art Ray-Caster in C++
+# Ashii-Art Ray-Caster in C++
 
 Ever wondered what Minecraft would look like if it was spheres instead of blocks? And in ashii-art? And way underdeveloped? Me neither, perhaps something like this.
 
