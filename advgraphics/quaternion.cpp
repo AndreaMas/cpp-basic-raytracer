@@ -1,10 +1,14 @@
+#ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include "quaternion.h"
 
 using namespace mgd;
 
 Quaternion::Quaternion(Vector3 _im, Scalar _re) :im(_im), re(_re){}
+
+Quaternion::Quaternion() :im(), re(1) {}
 
 void Quaternion::conjugate()
 {
@@ -30,7 +34,7 @@ Quaternion mgd::operator * (const Quaternion& a, const Quaternion& b){
 
 Vector3 Quaternion::applyRotationTo(Vector3 v) const {
 	Quaternion q = fromVector3(v);
-	q = (*this) * q * (*this).conjugated();
+	q = (*this) * q * this->conjugated();
 	return q.im;
 }
 

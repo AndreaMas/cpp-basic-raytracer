@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "transform.h"
 #include "shapes3d.h"
+#include "gameobj.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,9 +13,9 @@ using namespace mgd;
 void Scene::toWorld(std::vector<Sphere>& allSpheres) const
 {
 	allSpheres.clear(); // clears old sphereList
-	for (const GameObj &go : allGameObjs) {
-		allSpheres.push_back(applyTransToSphere(go.transform, go.nose));
-		allSpheres.push_back(applyTransToSphere(go.transform, go.body));
+	for (const GameObj& go : allGameObjs) {
+		allSpheres.push_back(go.noseInWorldSpace());
+		allSpheres.push_back(go.bodyInWorldSpace());
 	}
 }
 
@@ -22,8 +23,10 @@ void Scene::populate(int numGameobjs)
 {
 	for (int i = 0; i < numGameobjs; i++) {
 		GameObj newGameobj;
-		newGameobj.transform.position = Vector3::randomVector(-2,2) + Vector3(0,0,10);
-		//newGameobj.transform.rotation = ;
+		newGameobj.transform.position = Vector3::randomVector(-10.1f,10.1f) + Vector3(0,0,5);
+		newGameobj.transform.rotation = Quaternion::fromAngleAxis(180, newGameobj.transform.position);
+		newGameobj.transform.position.y = 0;
+		
 		//newGameobj.transform.scale = ;
 		allGameObjs.push_back(newGameobj);
 	}
@@ -33,6 +36,26 @@ void Scene::decimate()
 {
 	allGameObjs.clear();
 }
+
+void Scene::transformAll(const Transform& t)
+{
+	for (int i = 0; i < allGameObjs.size(); i++) {
+		applyTransToGameobj(t, allGameObjs.at(i));
+	}
+}
+
+void Scene::transformAllLocally(const Transform& t)
+{
+	for (int i = 0; i < allGameObjs.size(); i++) {
+		applyTransToGameobjLocally(t, allGameObjs.at(i));
+	}
+}
+
+/*
+	====================================================
+	Raycast Related
+	====================================================
+*/
 
 const char* intensityToCstr(Scalar intensity) {
 	// convert intensity to ashii art value
@@ -61,13 +84,12 @@ const char* lighting(Versor3 normal, const Versor3& lightDir) {
 
 float mgd::currentTime() {
 	static float now = 0.0f;
-	now += 0.005;
+	now += 0.005f;
 	return now;
 	// return std::chrono::system_clock().now();
 }
 
 
-// scene from lesson 1
 void mgd::rayCasting(const std::vector<Sphere>& sphereVector) {
 	//float time = currentTime();
 	Camera cam(2.0f, 45, 45);

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <assert.h>
+#include <conio.h>
 //#include <chrono>
 
 #include "vector3.h"
@@ -7,12 +8,12 @@
 #include "camera.h"
 #include "quaternion.h"
 #include "transform.h"
-
+#include "gameobj.h"
 #include "scene.h"
 
-
-
 using namespace mgd;
+
+constexpr double PI_DOUBLE = 3.14159265358979;
 
 /*
 	====================================================
@@ -112,7 +113,26 @@ void unitTestTransformations() {
 }
 #pragma endregion
 
-
+/*
+	====================================================
+	Utilities
+	====================================================
+*/
+#pragma region Utilities
+void InputCharToAsciiValue() {
+	char key_press;
+	int ascii_value;
+	std::cout << "\n\t\t\tPress Any Key To Check  Its ASCI Value\n\n\t\t\tPress ESC to EXIT\n\n\n";
+	while (1)
+	{
+		key_press = _getch();
+		ascii_value = key_press;
+		if (ascii_value == 27) // For ESC
+			break;
+		std::cout << "\t\t\tKEY Pressed-> \" " << key_press << " \" Ascii Value =  " << ascii_value << "\n\n";
+	}
+}
+#pragma endregion
 /*
 	====================================================
 	Lesson 1 Old Scene
@@ -121,7 +141,7 @@ void unitTestTransformations() {
 #pragma region Lesson1
 float currentTimeLesson1() {
 	static float now = 0.0f;
-	now += 0.005;
+	now += 0.005f;
 	return now;
 	// return std::chrono::system_clock().now();
 }
@@ -149,14 +169,13 @@ const char* lightingLesson1(Versor3 normal, const Versor3& lightDir) {
 	return intensityToCstrLesson1(diffuse);
 }
 
-
 void rayCastingSphereLesson1() {  // scene from lesson 1
 	float time = currentTimeLesson1();
 	Camera cam(2.0f,45,45);
 	Versor3 lightDir = Versor3(1, 2, -2).normalized();
-	lightDir = Versor3(1,2,3*std::cos(time*0.2)).normalized();
+	lightDir = Versor3(1,2,3.0f*std::cos(time*0.2f)).normalized();
 	Sphere sphere1(Point3(0, 0, 6), 2);
-	Sphere sphere2(Point3(2.0 * std::cos(time), 1, 6 + 2.0 * std::sin(time)), 1);
+	Sphere sphere2(Point3(2.0f * std::cos(time), 1, 6 + 2.0f * std::sin(time)), 1);
 	Plane plane1(Point3(0,-1,0), Versor3(0,1,0));
 
 	std::string screenBuffer; // string to get ready and print all at once
@@ -178,7 +197,6 @@ void rayCastingSphereLesson1() {  // scene from lesson 1
 }
 #pragma endregion
 
-
 /*
 	====================================================
 	Main
@@ -186,7 +204,6 @@ void rayCastingSphereLesson1() {  // scene from lesson 1
 */
 
 int main() {
-
 
 	// unit tests
 	{
@@ -198,22 +215,92 @@ int main() {
 	unitTestTransformations();
 	}
 
-	Scene s;
-	int num_gameobjects = 50;
-	s.populate(num_gameobjects);
-	std::vector<Sphere> allSpheres;
-	s.toWorld(allSpheres);
+	// World Axis
+	Vector3 wX(1, 0, 0);
+	Vector3 wY(0, 1, 0);
+	Vector3 wZ(0, 0, 1);
 
+	// Movement & rotation magnitude
+	const float stepVal = 0.1f;
+	const float turnDegrees = 0.3f;
+	const float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
+
+	// Movement & rotation vectors
+	Vector3 forward   (0, 0,  stepVal);
+	Vector3 backwards (0, 0, -stepVal);
+	Vector3 left      (-stepVal, 0, 0);
+	Vector3 right     ( stepVal, 0, 0);
+	Quaternion yawnLeft  (wY, turnRad);
+	Quaternion yawnRight (wY, -turnRad);
+	//Quaternion pitchUp   ();
+	//Quaternion pitchDown ();
+
+	// Setup & populate scene
+	Scene s;
+	std::vector<Sphere> allSpheres;
+	int num_gameobjects = 20;
+	s.populate(num_gameobjects);
+
+	// First render
+	s.toWorld(allSpheres);
 	rayCasting(allSpheres);
-	
+
 	while (1) {
-		//if (((int)currentTime() % 10)) break;
-		// working scene from lesson 1
+		
+		// Working standalone scene from lesson 1
 		// rayCastingSphereLesson1();
-		s.decimate();
-		s.populate(3);
+
+		// check Input ascii values
+		// InputCharToAsciiValue();
+
+		// Check keys pressed
+		char key_press = _getch();
+		int ascii_value = (int)key_press;
+
+		// Default transform
+		Transform t;
+
+		// Transform is input dependant
+		switch (ascii_value) {
+		case 27: // For ESC
+			return 0;
+		case 119: // For W
+			t.position = forward;
+			break;
+		case 97:  // For A
+			t.position = left;
+			break;
+		case 115: // For S 
+			t.position = backwards;
+			break;
+		case 100: // For D
+			t.position = right;
+			break;
+		case 105: // For I
+			t.rotation = Quaternion();
+			break;
+		case 106: // For J
+			t.rotation = yawnLeft;
+			break;
+		case 107: // For K
+			t.rotation = Quaternion();
+			break;
+		case 108: // For L
+			t.rotation = yawnRight;
+			break;
+		default: break;
+		}
+
+
+
+		t.invert();
+		s.transformAll(t);
+		s.transformAll(t);
+		//s.transformAllLocally(t);
+		//s.transformAllLocally(t);
 		s.toWorld(allSpheres);
 		rayCasting(allSpheres);
+
 	}
 		
 

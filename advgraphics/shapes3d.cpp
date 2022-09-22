@@ -52,3 +52,16 @@ Sphere mgd::applyTransToSphere(const Transform& a, const Sphere& s){
 	    a.transformScalar(s.r)
 	);
 }
+
+//void mgd::applyTransToSphereRef(const Transform& a, Sphere& s){
+//	a.transformPoint(s.c);
+//	a.transformScalar(s.r);
+//}
+
+//Sphere mgd::applyTransToSphereWithPivot(const Transform& a, Sphere& s, const Vector3& pivot)
+//{
+//	return Sphere(
+//		a.transformPoint(s.c),
+//		a.transformScalar(s.r)
+//	);
+//}
