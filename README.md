@@ -5,7 +5,7 @@ Ever wondered what Minecraft would look like if it was spheres instead of blocks
 ![ashii](https://user-images.githubusercontent.com/32450751/190892491-c9d1f7cd-4c60-4692-aa8f-68e8ef03a762.gif)
 
 ## What is this?
-A bare-bone ray-caster, able to render spheres and planes. No use of graphic libraries. This makes this project very suitable for getting comfortable with fundamental computer graphics topics, such as transforms, quaternions, lambertian-lighting, ray-casting and more.
+A bare-bone ray-caster, able to render spheres and planes. No use of graphic libraries. This makes this project very suitable for getting comfortable with C++ and fundamental computer graphics topics, such as transforms, quaternions, lambertian-lighting, ray-casting and more.
 
 ## Features
 - **Basic Movement:** User can move in the scene (WASD) and rotate its head left and right (JL). Here, the scene is populated with spheres with noses.
