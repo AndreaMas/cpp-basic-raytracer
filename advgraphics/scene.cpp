@@ -23,9 +23,10 @@ void Scene::populate(int numGameobjs)
 {
 	for (int i = 0; i < numGameobjs; i++) {
 		GameObj newGameobj;
-		newGameobj.transform.position = Vector3::randomVector(-0.1f,0.1f) + Vector3(0,0,10);
+		newGameobj.transform.position = Vector3::randomVector(-10.1f,10.1f) + Vector3(0,0,5);
+		newGameobj.transform.rotation = Quaternion::fromAngleAxis(180, newGameobj.transform.position);
 		newGameobj.transform.position.y = 0;
-		//newGameobj.transform.rotation = ;
+		
 		//newGameobj.transform.scale = ;
 		allGameObjs.push_back(newGameobj);
 	}
@@ -39,7 +40,6 @@ void Scene::decimate()
 void Scene::transformAll(const Transform& t)
 {
 	for (int i = 0; i < allGameObjs.size(); i++) {
-		allGameObjs.at(i).transform.position;
 		applyTransToGameobj(t, allGameObjs.at(i));
 	}
 }
@@ -47,7 +47,6 @@ void Scene::transformAll(const Transform& t)
 void Scene::transformAllLocally(const Transform& t)
 {
 	for (int i = 0; i < allGameObjs.size(); i++) {
-		allGameObjs.at(i).transform.position;
 		applyTransToGameobjLocally(t, allGameObjs.at(i));
 	}
 }

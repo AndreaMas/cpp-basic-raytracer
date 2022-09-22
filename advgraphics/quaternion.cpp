@@ -34,7 +34,7 @@ Quaternion mgd::operator * (const Quaternion& a, const Quaternion& b){
 
 Vector3 Quaternion::applyRotationTo(Vector3 v) const {
 	Quaternion q = fromVector3(v);
-	q = (*this) * q * (*this).conjugated();
+	q = (*this) * q * this->conjugated();
 	return q.im;
 }
 

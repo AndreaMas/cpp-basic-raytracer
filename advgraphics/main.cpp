@@ -216,19 +216,29 @@ int main() {
 	}
 
 	// World Axis
-	Vector3 x(1, 0, 0);
-	Vector3 y(0, 1, 0);
-	Vector3 z(0, 0, 1);
+	Vector3 wX(1, 0, 0);
+	Vector3 wY(0, 1, 0);
+	Vector3 wZ(0, 0, 1);
 
 	// Movement & rotation magnitude
 	const float stepVal = 0.1f;
-	float turnDegrees = 0.05f;
-	float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
+	const float turnDegrees = 0.3f;
+	const float turnRad = turnDegrees * (float)PI_DOUBLE / 180.0f;
+
+	// Movement & rotation vectors
+	Vector3 forward   (0, 0,  stepVal);
+	Vector3 backwards (0, 0, -stepVal);
+	Vector3 left      (-stepVal, 0, 0);
+	Vector3 right     ( stepVal, 0, 0);
+	Quaternion yawnLeft  (wY, turnRad);
+	Quaternion yawnRight (wY, -turnRad);
+	//Quaternion pitchUp   ();
+	//Quaternion pitchDown ();
 
 	// Setup & populate scene
 	Scene s;
 	std::vector<Sphere> allSpheres;
-	int num_gameobjects = 1;
+	int num_gameobjects = 20;
 	s.populate(num_gameobjects);
 
 	// First render
@@ -255,35 +265,39 @@ int main() {
 		case 27: // For ESC
 			return 0;
 		case 119: // For W
-			t.position = Vector3(0, 0, stepVal);
+			t.position = forward;
 			break;
 		case 97:  // For A
-			t.position = Vector3(-stepVal, 0, 0);
+			t.position = left;
 			break;
 		case 115: // For S 
-			t.position = Vector3(0, 0, -stepVal);
+			t.position = backwards;
 			break;
 		case 100: // For D
-			t.position = Vector3(stepVal, 0, 0);
+			t.position = right;
 			break;
 		case 105: // For I
 			t.rotation = Quaternion();
 			break;
 		case 106: // For J
-			t.rotation = Quaternion(y, turnRad);
+			t.rotation = yawnLeft;
 			break;
 		case 107: // For K
 			t.rotation = Quaternion();
 			break;
 		case 108: // For L
-			t.rotation = Quaternion(y, -turnRad);
+			t.rotation = yawnRight;
 			break;
 		default: break;
 		}
 
+
+
 		t.invert();
 		s.transformAll(t);
-		// s.transformAllLocally(t); // needs testing
+		s.transformAll(t);
+		//s.transformAllLocally(t);
+		//s.transformAllLocally(t);
 		s.toWorld(allSpheres);
 		rayCasting(allSpheres);
 
