@@ -133,69 +133,6 @@ void InputCharToAsciiValue() {
 	}
 }
 #pragma endregion
-/*
-	====================================================
-	Lesson 1 Old Scene
-	====================================================
-*/
-#pragma region Lesson1
-float currentTimeLesson1() {
-	static float now = 0.0f;
-	now += 0.005f;
-	return now;
-	// return std::chrono::system_clock().now();
-}
-
-const char* intensityToCstrLesson1(Scalar intensity) {
-	// convert intensity to ashii art value
-	switch (int(round(intensity * 8))) {
-	case 0: return "  "; // darkest
-	case 1: return " '";
-	case 2: return " +";
-	case 3: return " *";
-	case 4: return " #";
-	case 5: return "'#";
-	case 6: return "+#";
-	case 7: return "*#";
-	case 8: return "##"; // lightest
-	default: return "??";
-	}
-}
-
-const char* lightingLesson1(Versor3 normal, const Versor3& lightDir) {
-	// Lambert lighting
-	Scalar diffuse = dot(normal, lightDir);
-	if (diffuse < 0) diffuse = 0;
-	return intensityToCstrLesson1(diffuse);
-}
-
-void rayCastingSphereLesson1() {  // scene from lesson 1
-	float time = currentTimeLesson1();
-	Camera cam(2.0f,45,45);
-	Versor3 lightDir = Versor3(1, 2, -2).normalized();
-	lightDir = Versor3(1,2,3.0f*std::cos(time*0.2f)).normalized();
-	Sphere sphere1(Point3(0, 0, 6), 2);
-	Sphere sphere2(Point3(2.0f * std::cos(time), 1, 6 + 2.0f * std::sin(time)), 1);
-	Plane plane1(Point3(0,-1,0), Versor3(0,1,0));
-
-	std::string screenBuffer; // string to get ready and print all at once
-
-	for (int y = 0; y < cam.GetPixelDimX(); y++) {
-		for (int x = 0; x < cam.GetPixelDimX(); x++) {
-			Point3 hitPos;
-			Versor3 hitNorm;
-			Scalar distMax = 1000.0f;
-
-			rayCast(cam.primaryRay(x, y), sphere1, hitPos, hitNorm, distMax);
-			rayCast(cam.primaryRay(x, y), plane1, hitPos, hitNorm, distMax);
-			rayCast(cam.primaryRay(x, y), sphere2, hitPos, hitNorm, distMax);
-			screenBuffer += lightingLesson1(hitNorm, lightDir);
-		}
-		screenBuffer += "\n";
-	}
-	std::cout << screenBuffer;
-}
-#pragma endregion
 
 /*
 	====================================================
@@ -241,15 +178,12 @@ int main() {
 	int num_gameobjects = 20;
 	s.populate(num_gameobjects);
 
-	// First render
+	// First render (unnecessary)
 	s.toWorld(allSpheres);
 	rayCasting(allSpheres);
 
 	while (1) {
 		
-		// Working standalone scene from lesson 1
-		// rayCastingSphereLesson1();
-
 		// check Input ascii values
 		// InputCharToAsciiValue();
 
