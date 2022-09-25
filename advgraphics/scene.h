@@ -14,6 +14,7 @@ public:
 	void transformAllLocally(const Transform&);
 };
 
+// Raycast related
 float currentTime();
 void rayCasting(const std::vector<Sphere>& sphereVector);
 

@@ -15,15 +15,17 @@ void Scene::toWorld(std::vector<Sphere>& allSpheres) const
 {
 	allSpheres.clear(); // clears old sphereList
 	for (const GameObj& go : allGameObjs) {
-		std::vector<Sphere> goMesh = go.meshInWorldSpace();
-		allSpheres.insert(goMesh.begin(), allSpheres.begin(), allSpheres.end());
+		std::vector<Sphere> goSpheres = go.meshInWorldSpace();
+		for (const Sphere& sphere : goSpheres) {
+			allSpheres.push_back(sphere);
+		}
 	}
 }
 
 void Scene::populate(int numGameobjs)
 {
 	for (int i = 0; i < numGameobjs; i++) {
-		FaceObj newGameobj;
+		GameObj newGameobj;
 		newGameobj.transform.position = Vector3::randomVector(-10.1f,10.1f) + Vector3(0,0,5);
 		newGameobj.transform.rotation = Quaternion::fromAngleAxis(180, newGameobj.transform.position);
 		newGameobj.transform.position.y = 0;

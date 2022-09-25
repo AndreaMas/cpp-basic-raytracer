@@ -4,9 +4,9 @@
 
 using namespace mgd;
 
-Ray::Ray(Point3 _p, Vector3 _d) : p(_p), d(_d.normalized()) {}
+Ray::Ray() :p(Point3()), d(Vector3()) {}
 
-Ray::Ray(){}
+Ray::Ray(Point3 _p, Vector3 _d) : p(_p), d(_d.normalized()) {}
 
 Plane::Plane(){}
 
@@ -16,7 +16,7 @@ Sphere::Sphere(Point3 _c, Scalar _r):c(_c),r(_r){}
 
 bool mgd::rayCast(Ray ray, Sphere sphere, Point3& hitPos, Versor3 &hitNorm, float& distMax) {
 	// hitpos is: (ray.p + k * ray.dir)
-	// with this eq working: (a*k^2 + b*k + c = 0)
+	// with this eq true: (a*k^2 + b*k + c = 0)
 	Scalar a = 1.0;
 	Scalar b = 2 * dot(ray.d, ray.p - sphere.c);
 	Scalar c = (ray.p - sphere.c).squaredNorm() - sphere.r * sphere.r;
@@ -53,15 +53,3 @@ Sphere mgd::applyTransToSphere(const Transform& a, const Sphere& s){
 	);
 }
 
-//void mgd::applyTransToSphereRef(const Transform& a, Sphere& s){
-//	a.transformPoint(s.c);
-//	a.transformScalar(s.r);
-//}
-
-//Sphere mgd::applyTransToSphereWithPivot(const Transform& a, Sphere& s, const Vector3& pivot)
-//{
-//	return Sphere(
-//		a.transformPoint(s.c),
-//		a.transformScalar(s.r)
-//	);
-//}

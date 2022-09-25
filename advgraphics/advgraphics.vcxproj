@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="faceObj.cpp" />
     <ClCompile Include="gameobj.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="quaternion.cpp" />
@@ -138,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="faceObj.h" />
     <ClInclude Include="gameobj.h" />
     <ClInclude Include="quaternion.h" />
     <ClInclude Include="scene.h" />
