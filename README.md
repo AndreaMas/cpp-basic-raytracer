@@ -12,11 +12,12 @@ A bare-bone ray-caster, able to render spheres and planes. No use of graphic lib
 
 ![world-movement](https://user-images.githubusercontent.com/32450751/191772403-c9b7c189-4492-4dfb-bf35-cb3adfbcba88.gif)
 
-- **Posess gameobjects:** User, switching modality, can move other gameObjects in the scene, and rotate them (same commands).
+- **Posess gameobject/gameobjects:** User, switching modality, can move other gameObjects in the scene, and rotate them (same commands).
 
 ![movement-gameobj](https://user-images.githubusercontent.com/32450751/191773960-ca243ba7-7683-42d3-b167-d0dfa99b2ea6.gif)
 
 - Game Objects can be composed of many spheres, enabilng the creation of complex meshes.
+- Floor/Plane rendering
 
 
 
