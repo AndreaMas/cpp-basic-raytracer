@@ -4,9 +4,7 @@ using namespace mgd;
 
 GameObj::GameObj():
 	transform() //identity
-{
-
-}
+{}
 
 std::vector<mgd::Sphere> GameObj::meshInWorldSpace() const
 {

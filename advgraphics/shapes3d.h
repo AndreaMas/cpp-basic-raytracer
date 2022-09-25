@@ -32,5 +32,6 @@ struct Plane {
 bool rayCast(Ray r, Sphere s, Point3& hitPoint, Versor3& hitNorm, float& distMax);
 bool rayCast(Ray ray, Plane plane, Point3& hitPoint, Versor3& hitNorm, float &distMax);
 Sphere applyTransToSphere(const Transform& a, const Sphere& s);
+Plane applyTransToPlane(const Transform& a, const Plane& s);
 
 };// namespace end

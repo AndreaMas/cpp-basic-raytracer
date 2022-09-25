@@ -53,3 +53,11 @@ Sphere mgd::applyTransToSphere(const Transform& a, const Sphere& s){
 	);
 }
 
+Plane mgd::applyTransToPlane(const Transform& a, const Plane& s)
+{
+	return Plane(
+		a.transformPoint(s.p),
+		a.transformVersor(s.n)
+	);
+}
+

@@ -4,9 +4,11 @@
 //#include <chrono>
 
 #include "vector3.h"
+#include "quaternion.h"
+
 #include "shapes3d.h"
 #include "camera.h"
-#include "quaternion.h"
+
 #include "transform.h"
 #include "gameobj.h"
 #include "scene.h"
@@ -136,6 +138,21 @@ void InputCharToAsciiValue() {
 
 /*
 	====================================================
+	Modes: user changes what to do by pressing 'm' key
+	====================================================
+*/
+
+namespace mgd {
+	enum Modes {
+		MOVEMENT = 0,
+		MOVE_OBJS = 1,
+		MOVE_OBJ = 2,
+		Last = 3 // just for iteration
+	};
+}
+
+/*
+	====================================================
 	Main
 	====================================================
 */
@@ -153,9 +170,9 @@ int main() {
 	}
 
 	// World Axis
-	Vector3 wX(1, 0, 0);
-	Vector3 wY(0, 1, 0);
-	Vector3 wZ(0, 0, 1);
+	Vector3 wX(1, 0, 0); // cam right
+	Vector3 wY(0, 1, 0); // cam up
+	Vector3 wZ(0, 0, 1); // cam forward
 
 	// Movement & rotation magnitude
 	const float stepVal = 0.1f;
@@ -169,23 +186,30 @@ int main() {
 	Vector3 right     ( stepVal, 0, 0);
 	Quaternion yawnLeft  (wY, turnRad);
 	Quaternion yawnRight (wY, -turnRad);
-	//Quaternion pitchUp   ();
-	//Quaternion pitchDown ();
 
-	// Setup & populate scene
+	// Setup scene 
 	Scene s;
 	std::vector<Sphere> allSpheres;
-	int num_gameobjects = 20;
-	s.populate(num_gameobjects);
+	std::vector<Plane> allPlanes;
+	Modes mode = MOVEMENT; // user action
 
-	// First render (unnecessary)
-	s.toWorld(allSpheres);
-	rayCasting(allSpheres);
+	// Populate scene
+	int numGameObjects = 0;
+	int numFaceObjects = 20;
+	//s.populateGameObjs(numGameObjects);
+	s.populateFaceObjs(numFaceObjects);
+	s.populatePlane();
+
+	// First render
+	//s.GameObjsToWorld(allSpheres);
+	s.FaceObjsToWorld(allSpheres);
+	s.PlaneObjsToWorld(allPlanes);
+	rayCasting(allSpheres, allPlanes);
 
 	while (1) {
 		
 		// check Input ascii values
-		// InputCharToAsciiValue();
+		//InputCharToAsciiValue();
 
 		// Check keys pressed
 		char key_press = _getch();
@@ -222,26 +246,40 @@ int main() {
 		case 108: // For L
 			t.rotation = yawnRight;
 			break;
+		case 109: // For M (change user action)
+			// iterate through different modes
+			mode = Modes(mode + 1);
+			if (mode == Last) mode = Modes(0);
+			break;
 		default: break;
 		}
 
 
-
+		// Apply transform
 		t.invert();
-		s.transformAll(t);
-		s.transformAll(t);
-		//s.transformAllLocally(t);
-		//s.transformAllLocally(t);
-		s.toWorld(allSpheres);
-		rayCasting(allSpheres);
+		switch (mode) {
+		case MOVEMENT:
+			s.transformAll(t);
+			s.transformAll(t);
+			break;
+		case MOVE_OBJS:
+			s.transformAllLocally(t);
+			s.transformAllLocally(t);
+		case MOVE_OBJ:
+			// move just one face obj
+			s.transformJust(0,t);
+			s.transformJust(0,t);
+			break;
+		default: break;
+		}
+
+		// Render
+		//s.GameObjsToWorld(allSpheres);
+		s.FaceObjsToWorld(allSpheres);
+		s.PlaneObjsToWorld(allPlanes);
+		rayCasting(allSpheres, allPlanes);
 
 	}
-		
-
-	
-	
-
-
 
 }
 

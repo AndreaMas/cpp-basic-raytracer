@@ -42,6 +42,9 @@
     <ClCompile Include="faceObj.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="planeObj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector3.h">
@@ -66,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="faceObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="planeObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

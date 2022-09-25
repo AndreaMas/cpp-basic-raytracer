@@ -131,6 +131,7 @@
     <ClCompile Include="faceObj.cpp" />
     <ClCompile Include="gameobj.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="planeObj.cpp" />
     <ClCompile Include="quaternion.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="shapes3d.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="faceObj.h" />
     <ClInclude Include="gameobj.h" />
+    <ClInclude Include="planeObj.h" />
     <ClInclude Include="quaternion.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="shapes3d.h" />
