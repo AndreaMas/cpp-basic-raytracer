@@ -194,16 +194,12 @@ int main() {
 	Modes mode = MOVEMENT; // user action
 
 	// Populate scene
-	int numGameObjects = 0;
+	int numGameObjects = 20;
 	int numFaceObjects = 20;
-	//s.populateGameObjs(numGameObjects);
-	s.populateFaceObjs(numFaceObjects);
-	s.populatePlane();
+	s.populateGameObjs(numGameObjects);
 
 	// First render
-	//s.GameObjsToWorld(allSpheres);
-	s.FaceObjsToWorld(allSpheres);
-	s.PlaneObjsToWorld(allPlanes);
+	s.toWorld(allSpheres, allPlanes);
 	rayCasting(allSpheres, allPlanes);
 
 	while (1) {
@@ -274,9 +270,7 @@ int main() {
 		}
 
 		// Render
-		//s.GameObjsToWorld(allSpheres);
-		s.FaceObjsToWorld(allSpheres);
-		s.PlaneObjsToWorld(allPlanes);
+		s.toWorld(allSpheres, allPlanes);
 		rayCasting(allSpheres, allPlanes);
 
 	}
