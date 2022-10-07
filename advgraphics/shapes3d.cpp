@@ -46,7 +46,8 @@ bool mgd::rayCast(Ray ray, Plane plane, Point3& hitPos, Versor3& hitNorm, float 
 	return true;
 }
 
-Sphere mgd::applyTransToSphere(const Transform& a, const Sphere& s){
+Sphere mgd::applyTransToSphere(const Transform& a, const Sphere& s)
+{
 	return Sphere(
 		a.transformPoint(s.c),
 	    a.transformScalar(s.r)

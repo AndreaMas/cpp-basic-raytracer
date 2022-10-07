@@ -6,10 +6,18 @@ GameObj::GameObj():
 	transform() //identity
 {}
 
-std::vector<mgd::Sphere> GameObj::meshInWorldSpace() const
+void GameObj::spheresInWorldSpace(std::vector<Sphere>& allSpheres) const
 {
-	std::vector<Sphere> v;
-	return v;
+	for (const Sphere s : spheres) {
+		allSpheres.push_back(applyTransToSphere(transform, s));
+	}
+}
+
+void GameObj::planesInWorldSpace(std::vector<Plane>& allPlanes) const
+{
+	for (const Plane p : planes) {
+		allPlanes.push_back(applyTransToPlane(transform, p));
+	}
 }
 
 void mgd::applyTransToGameobj(const Transform& t, GameObj& go)

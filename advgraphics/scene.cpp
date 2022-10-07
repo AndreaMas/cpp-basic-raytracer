@@ -3,7 +3,6 @@
 #include "transform.h"
 #include "shapes3d.h"
 #include "gameobj.h"
-#include "faceObj.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,80 +10,47 @@
 using namespace mgd;
 
 
-// Turns vector of GameObjects into vector of Spheres, which can be rendered
-void Scene::GameObjsToWorld(std::vector<Sphere>& allSpheres) const
+// bring spheres & planes of gameobjects in world space
+void Scene::toWorld(std::vector<Sphere>& allSpheres, std::vector<Plane>& allPlanes)
 {
-	allSpheres.clear(); // clears old sphereList
+	allSpheres.clear();
+	allPlanes.clear();
+
 	for (const GameObj& go : gameObjs) {
-		std::vector<Sphere> goSpheres = go.meshInWorldSpace();
-		for (const Sphere& sphere : goSpheres) {
-			allSpheres.push_back(sphere);
-		}
+		go.spheresInWorldSpace(allSpheres);
+		go.planesInWorldSpace(allPlanes);
 	}
 }
 
-// Turns vector of FaceObjects into vector of Spheres, which can be rendered
-void Scene::FaceObjsToWorld(std::vector<Sphere>& allSpheres) const
-{
-	allSpheres.clear(); // clears old sphereList
-	for (const FaceObj& fo : faceObjs) {
-		std::vector<Sphere> goSpheres = fo.meshInWorldSpace();
-		for (const Sphere& sphere : goSpheres) {
-			allSpheres.push_back(sphere);
-		}
-	}
-}
-
-// Turns vector of PlaneObjects into vector of Planes, which can be rendered
-void Scene::PlaneObjsToWorld(std::vector<Plane>& allPlanes) const
-{
-	allPlanes.clear(); // clears old planeList
-
-	for (const PlaneObj& po : planeObjs) {
-		allPlanes.push_back(po.planeMeshInWorldSpace());
-	}
-}
 
 void Scene::populateGameObjs(int numGameObj)
 {
-	// spawn plain gameobjects (no mesh or anything, only transform)
+	// add plane gameobject
+	Plane plane(Point3(0, -2, 0), Versor3(0, 1, 0));
+	GameObj po;
+	po.planes.push_back(plane);
+	gameObjs.push_back(po);
+
+	// add "faces" gameobjects
 	for (int i = 0; i < numGameObj; i++) {
 		GameObj go;
 		go.transform.position = Vector3::randomVector(-10.0f,10.0f) + Vector3(0,0,5);
 		go.transform.rotation = Quaternion::fromAngleAxis(180, Vector3::randomVector(0.0f, 1.0f));
-		//newGameobj.transform.scale = ;
+
+		Sphere body(Vector3(0,0,0), 1);
+		Sphere nose(Vector3(0,0,0.8f), 0.5f);
+		go.spheres.push_back(body);
+		go.spheres.push_back(nose);
 
 		gameObjs.push_back(go);
 	}
 
 }
 
-void Scene::populateFaceObjs(int numFaceObj)
-{
-	// spawn face objects
-	for (int i = 0; i < numFaceObj; i++) {
-		FaceObj fo;
-		fo.transform.position = Vector3::randomVector(-10.0f, 10.0f) + Vector3(0, 0, 5);
-		fo.transform.rotation = Quaternion::fromAngleAxis(180, Vector3::randomVector(0.0f, 1.0f));
-		//newGameobj.transform.scale = ;
-		fo.transform.position.y = 0;
-
-		faceObjs.push_back(fo);
-	}
-}
-
-
-void Scene::populatePlane()
-{
-	PlaneObj planeObj(Point3(0,-1,0), Versor3(0,1,0));
-	planeObjs.push_back(planeObj);
-}
 
 void Scene::decimate()
 {
 	gameObjs.clear();
-	faceObjs.clear();
-	planeObjs.clear();
 }
 
 void Scene::transformAll(const Transform& t)
@@ -93,16 +59,6 @@ void Scene::transformAll(const Transform& t)
 	for (unsigned int i = 0; i < gameObjs.size(); i++) {
 		applyTransToGameobj(t, gameObjs.at(i));
 	}
-
-	// transform faceobjects
-	for (unsigned int i = 0; i < faceObjs.size(); i++) {
-		applyTransToGameobj(t, faceObjs.at(i));
-	}
-
-	// transform planes
-	for (unsigned int i = 0; i < planeObjs.size(); i++) {
-		applyTransToGameobj(t, planeObjs.at(i));
-	}
 }
 
 void Scene::transformAllLocally(const Transform& t)
@@ -110,26 +66,25 @@ void Scene::transformAllLocally(const Transform& t)
 	for (unsigned int i = 0; i < gameObjs.size(); i++) {
 		applyTransToGameobjLocally(t, gameObjs.at(i));
 	}
-
-	// transform faceobjects
-	for (unsigned int i = 0; i < faceObjs.size(); i++) {
-		applyTransToGameobjLocally(t, faceObjs.at(i));
-	}
-
-	// transform planes
-	for (unsigned int i = 0; i < planeObjs.size(); i++) {
-		applyTransToGameobjLocally(t, planeObjs.at(i));
-	}
 }
 
 void Scene::transformJust(int index, const Transform& t)
 {
-	applyTransToGameobjLocally(t, faceObjs.at(index));
+	if (index < 0 || index > gameObjs.size()) {
+		std::cout << "Index out of bounds ..." << std::endl;
+		return;
+	} 
+	applyTransToGameobjLocally(t, gameObjs.at(index));
 }
 
-
-
-
+void Scene::toView(int index)
+{
+	if (index < 0 || index > gameObjs.size()) {
+		std::cout << "Index out of bounds ..." << std::endl;
+		return;
+	}
+	transformAll(gameObjs.at(index).transform);
+}
 
 /*
 	====================================================
