@@ -117,11 +117,33 @@ void unitTestTransformations() {
 
 /*
 	====================================================
+	Modes: user changes what to do by pressing 'm' key
+	====================================================
+*/
+
+namespace mgd {
+	enum Modes {
+		MOVEMENT = 0,
+		MOVE_OBJS = 1,
+		MOVE_OBJ = 2,
+		POSSESS = 3,
+		Last = 4 // just for iteration
+	};
+}
+
+/*
+	====================================================
 	Utilities
 	====================================================
 */
 #pragma region Utilities
-void InputCharToAsciiValue() {
+int InputAsciiValue() {
+	// Check keys pressed
+	char keyPress = _getch();
+	return (int)keyPress;
+}
+
+void InputCheckCharToAsciiValue() {
 	char key_press;
 	int ascii_value;
 	std::cout << "\n\t\t\tPress Any Key To Check  Its ASCI Value\n\n\t\t\tPress ESC to EXIT\n\n\n";
@@ -134,22 +156,15 @@ void InputCharToAsciiValue() {
 		std::cout << "\t\t\tKEY Pressed-> \" " << key_press << " \" Ascii Value =  " << ascii_value << "\n\n";
 	}
 }
+
+Modes NextMode(Modes mode) {
+	mode = Modes(mode + 1); // iterate through different modes
+	if (mode == Last) mode = Modes(0);
+	return mode;
+}
 #pragma endregion
 
-/*
-	====================================================
-	Modes: user changes what to do by pressing 'm' key
-	====================================================
-*/
 
-namespace mgd {
-	enum Modes {
-		MOVEMENT = 0,
-		MOVE_OBJS = 1,
-		MOVE_OBJ = 2,
-		Last = 3 // just for iteration
-	};
-}
 
 /*
 	====================================================
@@ -191,7 +206,6 @@ int main() {
 	Scene s;
 	std::vector<Sphere> allSpheres;
 	std::vector<Plane> allPlanes;
-	Modes mode = MOVEMENT; // user action
 
 	// Populate scene
 	int numGameObjects = 20;
@@ -200,52 +214,74 @@ int main() {
 
 	// First render
 	s.toWorld(allSpheres, allPlanes);
-	rayCasting(allSpheres, allPlanes);
+	mgd::rayCasting(allSpheres, allPlanes);
+
+	// initial Mode
+	std::cout << "Mode MOVEMENT: Move in world with WASD and JL to turn around." << std::endl;
+	Modes mode = MOVEMENT;
+
+	// other initializers
+	int idGameObj = 0;
 
 	while (1) {
 		
 		// check Input ascii values
-		//InputCharToAsciiValue();
+		//InputCheckCharToAsciiValue();
 
 		// Check keys pressed
 		char key_press = _getch();
 		int ascii_value = (int)key_press;
 
-		// Default transform
+		// Default transform to apply
 		Transform t;
 
-		// Transform is input dependant
+		// Change Transform or Mode depending from user input
 		switch (ascii_value) {
-		case 27: // For ESC
+		case 27: // ESC
 			return 0;
-		case 119: // For W
+		case 119: // W
 			t.position = forward;
 			break;
-		case 97:  // For A
+		case 97:  // A
 			t.position = left;
 			break;
-		case 115: // For S 
+		case 115: // S 
 			t.position = backwards;
 			break;
-		case 100: // For D
+		case 100: // D
 			t.position = right;
 			break;
-		case 105: // For I
+		case 105: // I
 			t.rotation = Quaternion();
 			break;
-		case 106: // For J
+		case 106: // J
 			t.rotation = yawnLeft;
 			break;
-		case 107: // For K
+		case 107: // K
 			t.rotation = Quaternion();
 			break;
-		case 108: // For L
+		case 108: // L
 			t.rotation = yawnRight;
 			break;
-		case 109: // For M (change user action)
-			// iterate through different modes
-			mode = Modes(mode + 1);
-			if (mode == Last) mode = Modes(0);
+		case 109: // M (mode)
+			mode = MOVEMENT;
+			std::cout << " ----> MODE MOVEMENT: Move in world with WASD and JL to turn around. <--- " << std::endl;
+			break;
+		case 110: // N (mode)
+			mode = MOVE_OBJS;
+			std::cout << " ----> MODE MOVE_OBJS: Move and rotate all gameobjects (WASD and JL). <--- " << std::endl;
+			break;
+		case 111: // O (mode)
+			mode = MOVE_OBJ;
+			std::cout << " ----> MODE MOVE_OBJ: Move and rotate 1 gameobject (WASD and JL). <--- " << std::endl;
+			std::cout << " ----> Select gameobject with numbers 1-9: " << std::endl;
+			idGameObj = InputAsciiValue() - 48;
+			break;
+		case 112: // P (mode)
+			mode = POSSESS;
+			std::cout << " ----> MODE POSSESS: inherit a gameobjects position and rotation.<--- " << std::endl;
+			std::cout << " ----> Select gameobject with numbers 1-9: " << std::endl;
+			idGameObj = InputAsciiValue() - 48;
 			break;
 		default: break;
 		}
@@ -261,17 +297,21 @@ int main() {
 		case MOVE_OBJS:
 			s.transformAllLocally(t);
 			s.transformAllLocally(t);
+			break;
 		case MOVE_OBJ:
-			// move just one face obj
-			s.transformJust(0,t);
-			s.transformJust(0,t);
+			s.transformJust(idGameObj,t);
+			s.transformJust(idGameObj,t);
+			break;
+		case POSSESS:
+			s.toView(idGameObj);
+			mode = MOVEMENT;
 			break;
 		default: break;
 		}
 
 		// Render
 		s.toWorld(allSpheres, allPlanes);
-		rayCasting(allSpheres, allPlanes);
+		mgd::rayCasting(allSpheres, allPlanes);
 
 	}
 

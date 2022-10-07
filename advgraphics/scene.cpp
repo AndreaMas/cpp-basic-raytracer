@@ -26,7 +26,7 @@ void Scene::toWorld(std::vector<Sphere>& allSpheres, std::vector<Plane>& allPlan
 void Scene::populateGameObjs(int numGameObj)
 {
 	// add plane gameobject
-	Plane plane(Point3(0, -1, 0), Versor3(0, 1, 0));
+	Plane plane(Point3(0, -2, 0), Versor3(0, 1, 0));
 	GameObj po;
 	po.planes.push_back(plane);
 	gameObjs.push_back(po);
@@ -70,9 +70,21 @@ void Scene::transformAllLocally(const Transform& t)
 
 void Scene::transformJust(int index, const Transform& t)
 {
+	if (index < 0 || index > gameObjs.size()) {
+		std::cout << "Index out of bounds ..." << std::endl;
+		return;
+	} 
 	applyTransToGameobjLocally(t, gameObjs.at(index));
 }
 
+void Scene::toView(int index)
+{
+	if (index < 0 || index > gameObjs.size()) {
+		std::cout << "Index out of bounds ..." << std::endl;
+		return;
+	}
+	transformAll(gameObjs.at(index).transform);
+}
 
 /*
 	====================================================

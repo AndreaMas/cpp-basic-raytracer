@@ -14,10 +14,11 @@ public:
 	void decimate();
 
 	void toWorld(std::vector<Sphere>&, std::vector<Plane>&);
+	void toView(int idGameObj); // possess selected gameobject
 
 	void transformAll(const Transform&);
 	void transformAllLocally(const Transform&);
-	void transformJust(int, const Transform&);
+	void transformJust(int idGameObj, const Transform&);
 	
 };
 
