@@ -210,7 +210,7 @@ int main() {
 	// Populate scene
 	int numGameObjects = 20;
 	int numFaceObjects = 20;
-	s.populateGameObjs(numGameObjects);
+	s.populate(numGameObjects);
 
 	// First render
 	s.toWorld(allSpheres, allPlanes);
