@@ -19,7 +19,8 @@ User can perform different actions with the buttons **M, N, O** and **P**:
 Other features:
 - gameobjects can be created with as many spheres and planes as desided.
 
-
+Other info:
+- Project built with Microsoft Visual Studio 2022
 
 
 
