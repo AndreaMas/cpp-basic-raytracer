@@ -23,7 +23,7 @@ void Scene::toWorld(std::vector<Sphere>& allSpheres, std::vector<Plane>& allPlan
 }
 
 
-void Scene::populateGameObjs(int numGameObj)
+void Scene::populate(int numGameObj)
 {
 	// add plane gameobject
 	Plane plane(Point3(0, -2, 0), Versor3(0, 1, 0));

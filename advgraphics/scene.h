@@ -10,7 +10,7 @@ class Scene {
 public:
 	std::vector<GameObj> gameObjs; // a vector of gameobjects, each with its own transform
 
-	void populateGameObjs(int numGameObj); // populate the scene
+	void populate(int numGameObj); // populate the scene
 	void decimate();
 
 	void toWorld(std::vector<Sphere>&, std::vector<Plane>&);
