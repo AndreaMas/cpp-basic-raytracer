@@ -7,17 +7,17 @@ Ever wondered what Minecraft would look like if it was spheres instead of blocks
 ## What is this?
 A bare-bone ray-caster, able to render spheres and planes. No use of graphic libraries. This makes this project very suitable for getting comfortable with C++ and fundamental computer graphics topics, such as transforms, quaternions, lambertian-lighting, ray-casting and more.
 
+![tarini-homework](https://user-images.githubusercontent.com/32450751/194606766-ffb40325-2ede-4a48-a5a4-193324c86083.gif)
+
 ## Features
-- **Basic Movement:** User can move in the scene (WASD) and rotate its head left and right (JL). Here, the scene is populated with spheres with noses.
+User can perform different actions with the buttons **M, N, O** and **P**:
+- **M** -> **Basic Movement**: Move in the scene (WASD) and look left and right (JL).
+- **N** -> **Move all gameobjects**: Move all gameobjects in the scene (WASD) and rotate them (JL) relative to their local coordinates.
+- **O** -> **Move sibgle object**: Move a chosen gameobject in the scene (WASD) and rotate it (JL).
+- **P** -> **Possess gameobject**: Move to the position and rotation of a chosen gameobject.
 
-![world-movement](https://user-images.githubusercontent.com/32450751/191772403-c9b7c189-4492-4dfb-bf35-cb3adfbcba88.gif)
-
-- **Posess gameobject/gameobjects:** User, switching modality, can move other gameObjects in the scene, and rotate them (same commands).
-
-![movement-gameobj](https://user-images.githubusercontent.com/32450751/191773960-ca243ba7-7683-42d3-b167-d0dfa99b2ea6.gif)
-
-- Game Objects can be composed of many spheres, enabilng the creation of complex meshes.
-- Floor/Plane rendering
+Other features:
+- gameobjects can be created with as many spheres and planes as desided.
 
 
 
