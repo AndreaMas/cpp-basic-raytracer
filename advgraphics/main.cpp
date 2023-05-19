@@ -235,7 +235,6 @@ int main()
 	// Populate scene
 
 	int numGameObjects = 20;
-	int numFaceObjects = 20;
 	s.populate(numGameObjects);
 
 	// First render
